@@ -21,5 +21,24 @@ class QuizzesTest(unittest.TestCase):
         # Expecting `quiz1_id` to be Not `None`.
         self.assertIsNotNone(quiz1_id, "The quiz is Not `None`")
 
+    def test_expose_failure_02(self):
+        """
+        Test initializing the QuizzesController with an invalid file path and 
+        performing standard operations to check error handling and data integrity.
+        Code breaks at "app\\utils\\data_loader.py", line 20, in 'save_data'
+        """
+        invalid_file_path = "/invalid/path/quizzes.json"
+        self.ctrl = QuizzesController(invalid_file_path)
+
+        # Attempt to add a quiz and then retrieve it
+        specific_datetime = datetime(2023, 11, 23, 12, 30, 0)  # Example datetime
+        quiz_id = self.ctrl.add_quiz("Test Quiz", "This is a test quiz", specific_datetime, specific_datetime)
+        
+        # Attempt to retrieve the added quiz
+        retrieved_quiz = self.ctrl.get_quiz_by_id(quiz_id)
+
+        # Check if the quiz retrieval is handled properly
+        self.assertIsNotNone(retrieved_quiz, "Retrieving a quiz should be handled properly even with an invalid file path")
+
 if __name__ == '__main__':
     unittest.main()
