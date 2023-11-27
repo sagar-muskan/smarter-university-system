@@ -39,6 +39,21 @@ class QuizzesTest(unittest.TestCase):
 
         # Check if the quiz retrieval is handled properly
         self.assertIsNotNone(retrieved_quiz, "Retrieving a quiz should be handled properly even with an invalid file path")
+    
+    def test_expose_failure_03(self):
+        """
+        Trying to provide invalid utf-8 characters while creating a question.
+        Code breaks at 'app\\utils\\utils.py', line 11, in 'generate_id'
+        """
+        # clear previous history of quizzes.
+        self.ctrl.clear_data()
+        # add a quiz
+        quiz1_id = self.ctrl.add_quiz("Quiz1", "Sample Quiz 1", datetime.now(), datetime.now())
+        # add a question to the quiz, but with invalid utf-8 character.
+        question1_id = self.ctrl.add_question( quiz1_id, "Question 1 \ud800", "Sample Question1 1")
+        # If invalid characters are provided, the question should not be added to the quiz and
+        # `question1_id` should be `None`
+        self.assertIsNone(question1_id, "The question is `None`")
 
 if __name__ == '__main__':
     unittest.main()
