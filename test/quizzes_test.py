@@ -55,5 +55,25 @@ class QuizzesTest(unittest.TestCase):
         # `question1_id` should be `None`
         self.assertIsNone(question1_id, "The question is `None`")
 
+    def test_expose_failure_04(self):
+        """
+        Trying to add a question with object as title.
+        Here datetime object is passed as title.
+        Code breaks at "app\\utils\\data_loader.py", line 21, in 'save_data'
+
+        Note: Running this test case corrupts the `data\\quizzes_test.py` JSON structure. So, before re-running this
+        or any of the previous test cases, please delete `data\\quizzes_test.py` file.
+        """
+        # clear previous history of quizzes.
+        self.ctrl.clear_data()
+        # add some quiz
+        quiz1_id = self.ctrl.add_quiz("Quiz 1", "Sample Quiz 1", datetime.now(), datetime.now())
+        # add a question to the quiz with `datetime` object as parameter
+        question1_id = self.ctrl.add_question(quiz1_id, datetime.now(), datetime.now())
+        # If invalid object is provided, the question should not be added to the quiz
+        # `question1_id` should be `None`.
+        self.assertIsNone(question1_id)
+
+
 if __name__ == '__main__':
     unittest.main()
